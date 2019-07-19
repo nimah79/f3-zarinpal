@@ -1,0 +1,14 @@
+{
+    "name": "nimah79/f3-zarinpal",
+    "description": "Zarinpal Plugin for PHP Fat-Free Framework",
+    "keywords": ["F3","fatfree","zarinpal","payment","gateway"],
+    "homepage": "https://github.com/nimah79/f3-zarinpal",
+    "license": "GPL-3.0",
+    "require": {
+        "php": ">=5.4.0",
+        "php-curl": "*"
+    },
+    "autoload": {
+		"classmap": ["lib/"]
+    }
+}
