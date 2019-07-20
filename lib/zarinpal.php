@@ -16,7 +16,7 @@
  *
  */
 
-class Zarinpal extends Prefab
+class Zarinpal
 {
 
     private $merchant_id;
@@ -44,9 +44,9 @@ class Zarinpal extends Prefab
     const METHOD_REFRESH_AUTHORITY = 'RefreshAuthority';
     const METHOD_UNVERIFIED_TRANSACTION = 'UnverifiedTransactions';
 
-    public function __construct($merchant_id)
+    public function __construct()
     {
-        $this->merchant_id = $merchant_id;
+        $this->merchant_id = \Base::instance()->get('ZARINPAL.merchant_id');
     }
 
     /**

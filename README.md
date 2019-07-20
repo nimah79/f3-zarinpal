@@ -20,11 +20,11 @@ merchant_id=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 ## Quick Start
 #### Request Authority (and redirecting user)
 ```php
-$zarinpal = new Zarinpal('XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX');
+$zarinpal = new Zarinpal();
 
 $zarinpal->setAmount(5500);
 $zarinpal->setDescription('Purchasing test product');
-$zarinpal->setCallback('http://example.com/pay/verify');
+$zarinpal->setCallbackURL('http://example.com/pay/verify');
 
 $result = $zarinpal->request();
 if ($result->ok) {
