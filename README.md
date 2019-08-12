@@ -35,7 +35,7 @@ if ($result->ok) {
 ```
 #### Verifying transaction
 ```php
-$zarinpal = new Zarinpal('XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX');
+$zarinpal = new Zarinpal();
 
 $zarinpal->setAmount(5500);
 
