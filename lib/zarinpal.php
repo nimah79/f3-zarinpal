@@ -226,8 +226,9 @@ class Zarinpal
      * @param string $authority
      * @return Response
      */
-    public function verify($authority)
+    public function verify()
     {
+        $authority = \Base::instance()->exists('GET.Authority') ? \Base::instance()->get('GET.Authority') : 'xxx';
         $this->request_result = $this->post(
             self::METHOD_VERIFICATION,
             [
