@@ -1,7 +1,7 @@
 <?php
 
 /**
- *  Zarinpal for the PHP Fat-Free Framework
+ *  Zarinpal for the PHP Fat-Free Framework.
  *
  *  The contents of this file are subject to the terms of the GNU General
  *  Public License Version 3.0. You may not use this file except in
@@ -13,12 +13,9 @@
  *
  *  @version: 1.0
  *  @date: 2019/07/20
- *
  */
-
 class Zarinpal
 {
-
     private $merchant_id;
 
     protected $amount = null;
@@ -50,9 +47,10 @@ class Zarinpal
     }
 
     /**
-     * Sets amount for payment
+     * Sets amount for payment.
      *
-     * @param  integer $amount in Iranian toman
+     * @param int $amount in Iranian toman
+     *
      * @return void
      */
     public function setAmount($amount)
@@ -61,9 +59,10 @@ class Zarinpal
     }
 
     /**
-     * Sets description for payment
+     * Sets description for payment.
      *
-     * @param  string $description
+     * @param string $description
+     *
      * @return void
      */
     public function setDescription($description)
@@ -72,9 +71,10 @@ class Zarinpal
     }
 
     /**
-     * Sets user email for payment
+     * Sets user email for payment.
      *
-     * @param  string $email
+     * @param string $email
+     *
      * @return void
      */
     public function setEmail($email)
@@ -83,9 +83,10 @@ class Zarinpal
     }
 
     /**
-     * Sets user phone number for payment
+     * Sets user phone number for payment.
      *
      * @param string $mobile
+     *
      * @return void
      */
     public function setMobile($mobile)
@@ -94,9 +95,10 @@ class Zarinpal
     }
 
     /**
-     * Sets payment callback URL (for redirection after payment)
+     * Sets payment callback URL (for redirection after payment).
      *
      * @param string $url
+     *
      * @return void
      */
     public function setCallbackURL($url)
@@ -106,7 +108,7 @@ class Zarinpal
 
     /**
      * Enables Zaringate service
-     * Requires necessary services from Zarinpal
+     * Requires necessary services from Zarinpal.
      *
      * @return void
      */
@@ -116,7 +118,7 @@ class Zarinpal
     }
 
     /**
-     * Enables sandbox (test mode)
+     * Enables sandbox (test mode).
      *
      * @return void
      */
@@ -127,25 +129,27 @@ class Zarinpal
 
     /**
      * Adds a shared pay item (shared pay off)
-     * Requires necessary services from Zarinpal
+     * Requires necessary services from Zarinpal.
      *
      * @param string $account
-     * @param int $amount
+     * @param int    $amount
      * @param string $description
+     *
      * @return void
      */
     public function addSharedPay($account, $amount, $description)
     {
         $this->additional_data['Wages'][$account] = [
-            'Amount' => $amount,
+            'Amount'      => $amount,
             'Description' => $description,
         ];
     }
 
     /**
-     * Sets authority expiration time [1800, 3888000]
+     * Sets authority expiration time [1800, 3888000].
      *
      * @param int $seconds
+     *
      * @return void
      */
     public function expireIn($seconds)
@@ -154,7 +158,7 @@ class Zarinpal
     }
 
     /**
-     * Gets redirect URL (payment gateway URL)
+     * Gets redirect URL (payment gateway URL).
      *
      * @return string
      */
@@ -164,17 +168,17 @@ class Zarinpal
         if ($this->request_result->ok) {
             // Return sandbox redirect URL (if enabled)
             if ($this->is_sandbox) {
-                return self::SANDBOX_BASE_REDIRECT_URL . $this->getAuthority() . $zarinGate;
+                return self::SANDBOX_BASE_REDIRECT_URL.$this->getAuthority().$zarinGate;
             }
             // Return production redirect URL
-            return self::BASE_REDIRECT_URL . $this->getAuthority() . $zarinGate;
+            return self::BASE_REDIRECT_URL.$this->getAuthority().$zarinGate;
         } else {
             return false;
         }
     }
 
     /**
-     * Gets the authority
+     * Gets the authority.
      *
      * @return string|int
      */
@@ -183,21 +187,22 @@ class Zarinpal
         if (!$this->request_result->ok) {
             return false;
         }
+
         return $this->request_result->body->Authority;
     }
 
     /**
-     * Redirects user to payment URL
+     * Redirects user to payment URL.
      *
      * @return void
      */
     public function redirect()
     {
-        header('Location: ' . $this->getRedirectURL());
+        header('Location: '.$this->getRedirectURL());
     }
 
     /**
-     * Sends request to get authority
+     * Sends request to get authority.
      *
      * @return Response
      */
@@ -207,23 +212,25 @@ class Zarinpal
         $this->request_result = $this->post(
             $method,
             [
-                'MerchantID' => $this->merchant_id,
-                'Amount' => $this->amount,
-                'Description' => $this->description,
-                'Email' => $this->email,
-                'Mobile' => $this->mobile,
-                'CallbackURL' => $this->callback_url,
-                'AdditionalData' => $this->additional_data
+                'MerchantID'     => $this->merchant_id,
+                'Amount'         => $this->amount,
+                'Description'    => $this->description,
+                'Email'          => $this->email,
+                'Mobile'         => $this->mobile,
+                'CallbackURL'    => $this->callback_url,
+                'AdditionalData' => $this->additional_data,
             ],
             $this->is_sandbox
         );
+
         return $this->request_result;
     }
 
     /**
-     * Verifies a transaction
+     * Verifies a transaction.
      *
      * @param string $authority
+     *
      * @return Response
      */
     public function verify()
@@ -233,19 +240,21 @@ class Zarinpal
             self::METHOD_VERIFICATION,
             [
                 'MerchantID' => $this->merchant_id,
-                'Amount' => $this->amount,
-                'Authority' => $authority,
+                'Amount'     => $this->amount,
+                'Authority'  => $authority,
             ],
             $this->is_sandbox
         );
+
         return $this->request_result;
     }
 
     /**
-     * Refreshes an authority for custom time
+     * Refreshes an authority for custom time.
      *
      * @param string $authority
-     * @param int $expireIn In seconds
+     * @param int    $expireIn  In seconds
+     *
      * @return Response
      */
     public function refreshAuthority($authority, $expireIn)
@@ -254,16 +263,17 @@ class Zarinpal
             self::METHOD_REFRESH_AUTHORITY,
             [
                 'MerchantID' => $this->merchant_id,
-                'Authority' => $authority,
-                'ExpireIn' => $expireIn,
+                'Authority'  => $authority,
+                'ExpireIn'   => $expireIn,
             ],
             $this->is_sandbox
         );
+
         return $this->request_result;
     }
 
     /**
-     * Get a list of unverified (failed) transactions
+     * Get a list of unverified (failed) transactions.
      *
      * @return Response
      */
@@ -274,15 +284,17 @@ class Zarinpal
             ['MerchantID' => $this->merchant_id],
             false
         );
+
         return $this->request_result;
     }
 
     /**
-     * Sends a POST request via cURL
+     * Sends a POST request via cURL.
      *
      * @param string $method
-     * @param array $parameters
-     * @param bool $is_sandbox (optional)
+     * @param array  $parameters
+     * @param bool   $is_sandbox (optional)
+     *
      * @return Response
      */
     public function post($method, array $parameters = [], $is_sandbox = false)
@@ -290,44 +302,42 @@ class Zarinpal
         $parameters_json = json_encode($parameters);
 
         return new Response(json_decode(\Web::instance()->request($is_sandbox ? sprintf(self::SANDBOX_REST_API_URL, $method) : sprintf(self::REST_API_URL, $method), [
-            'method' => 'POST',
+            'method'  => 'POST',
             'content' => $parameters_json,
-            'header' => [
+            'header'  => [
                 'Content-Type: application/json',
-                'Content-Length: ' . strlen($parameters_json)
-            ]
+                'Content-Length: '.strlen($parameters_json),
+            ],
         ])['body']));
     }
-
 }
 
 class Response
 {
-
     public $ok;
     public $message;
     public $status;
     public $body;
 
     const ERROR_CODES = [
-        '-1' => 'Information submitted is incomplete',
-        '-2' => 'Merchant ID or Acceptor IP is not correct',
-        '-3' => 'Amount should be above 100 Toman',
-        '-4' => 'Approved level of Acceptor is Lower than the silver',
-        '-11' => 'Request Not found',
-        '-12' => 'Request is not editable',
-        '-21' => 'Financial operations for this transaction was not found',
-        '-22' => 'Transaction is unsuccessful',
-        '-33' => 'Transaction amount does not match the paid amount',
-        '-34' => 'Limit the number of transactions or number has crossed the divide',
-        '-40' => 'There is no access to the method',
-        '-41' => 'Additional Data related to information submitted is invalid',
-        '-42' => 'The life span length of the payment ID must be between 30 minutes and 45 days',
-        '-54' => 'Request archived',
+        '-1'   => 'Information submitted is incomplete',
+        '-2'   => 'Merchant ID or Acceptor IP is not correct',
+        '-3'   => 'Amount should be above 100 Toman',
+        '-4'   => 'Approved level of Acceptor is Lower than the silver',
+        '-11'  => 'Request Not found',
+        '-12'  => 'Request is not editable',
+        '-21'  => 'Financial operations for this transaction was not found',
+        '-22'  => 'Transaction is unsuccessful',
+        '-33'  => 'Transaction amount does not match the paid amount',
+        '-34'  => 'Limit the number of transactions or number has crossed the divide',
+        '-40'  => 'There is no access to the method',
+        '-41'  => 'Additional Data related to information submitted is invalid',
+        '-42'  => 'The life span length of the payment ID must be between 30 minutes and 45 days',
+        '-54'  => 'Request archived',
         '-998' => 'Connection Error: Can\'t connect to API (WebService returns null)',
         '-999' => 'Local Library Error',
-        '100' => 'Operation was successful',
-        '101' => 'Operation was successful but PaymentVerification operation on this transaction have already been done.',
+        '100'  => 'Operation was successful',
+        '101'  => 'Operation was successful but PaymentVerification operation on this transaction have already been done.',
     ];
 
     public function __construct($body)
@@ -336,6 +346,7 @@ class Response
             $this->ok = false;
             $this->status = '-998';
             $this->message = $this->getMessage($this->status);
+
             return null;
         }
         $this->body = $body;
@@ -345,9 +356,9 @@ class Response
     }
 
     /**
-     * Check is there any error in returned result
+     * Check is there any error in returned result.
      *
-     * @return boolean
+     * @return bool
      */
     private function hasError()
     {
@@ -355,7 +366,7 @@ class Response
     }
 
     /**
-     * Get returned status (API Result Status Code)
+     * Get returned status (API Result Status Code).
      *
      * @return int
      */
@@ -365,7 +376,7 @@ class Response
     }
 
     /**
-     * Get and Translate API Message
+     * Get and Translate API Message.
      *
      * @param string $status optional status code for local errors
      *
@@ -379,7 +390,8 @@ class Response
 
         // Return error message that sent from Zarinpal api as $message
         if (isset($this->body->errors)) {
-            $error = (array)$this->body->errors;
+            $error = (array) $this->body->errors;
+
             return reset($error)[0];
         }
 
